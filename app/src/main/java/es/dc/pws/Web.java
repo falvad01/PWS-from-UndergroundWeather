@@ -3,9 +3,12 @@ package es.dc.pws;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 public class Web {
 
@@ -54,11 +57,47 @@ public class Web {
 		String value = document.body()
 				.select("div.medium-4:nth-child(4) > div:nth-child(1) > div:nth-child(2) > lib-display-unit:nth-child(1) > span:nth-child(1) > span:nth-child(1)").get(0)
 				.text();
-		System.out.println(value);
+
 
 		return Double.valueOf(value);
 
 	}
+
+	public String getWind()  {
+
+		Document document = null;
+		try {
+			document = Jsoup.connect(url).get();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		String value = document.body()
+				.select(".text-bold").get(0)
+				.text();
+
+		return value;
+
+	}
+
+	public float getWindSpeed()  {
+
+		Document document = null;
+		try {
+			document = Jsoup.connect(url).get();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		String value = document.body()
+				.select(".big > lib-display-unit:nth-child(1) > span:nth-child(1) > span:nth-child(1)").get(0)
+				.text();
+
+		return Float.valueOf(value) * 3.6f;//Lo pasamos de mps a kh
+
+	}
+
+
+
+
 
 
 }
