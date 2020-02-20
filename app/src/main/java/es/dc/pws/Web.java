@@ -74,7 +74,7 @@ public class Web {
 		String value = document.body()
 				.select(".text-bold").get(0)
 				.text();
-
+		Log.i("YA", value);
 		return value;
 
 	}

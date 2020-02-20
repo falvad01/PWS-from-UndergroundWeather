@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -16,9 +17,9 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Web w;
+
     double temperature = -10;
-    private final int TIEMPO = 5000;
+    private final int TIEMPO = 1000;
 
 
 
@@ -31,14 +32,14 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        w = new Web();
+
 
 
         ProgressBar progres = findViewById(R.id.progresBar);
-
+        final TextView time = findViewById(R.id.lastUpdate);
 
         Drawable progressDrawabl = progres.getProgressDrawable().mutate();
-        progressDrawabl.setColorFilter(Color.GRAY, android.graphics.PorterDuff.Mode.SRC_IN);
+        progressDrawabl.setColorFilter(Color.WHITE, android.graphics.PorterDuff.Mode.SRC_IN);
         progres.setProgressDrawable(progressDrawabl);
 
         paintDataTemperature();//Pintamos la informacion por primera vez
@@ -46,13 +47,22 @@ public class MainActivity extends AppCompatActivity {
 
 
         final Handler handler = new Handler(); // En esta zona creamos el objeto Handler
+        final long startTime = System.nanoTime();
 
         handler.postDelayed(new Runnable() {
             public void run() {
 
+                long elapsedTime = System.nanoTime()-startTime;
+                long remainingTime = 6000 - elapsedTime;
+
+
                 //Estas fgunciones se repetiran cada X tiempo
                 paintDataTemperature();
                 paintDataWind();
+
+
+
+
 
                 handler.postDelayed(this, TIEMPO);
             }
@@ -65,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         TextView temp = findViewById(R.id.temperature);
-
+         Web w = new Web();
         temperature = w.getTemperature();
 
         ProgressBar progresTemp = findViewById(R.id.progresBarTemperature);
@@ -110,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void paintDataWind(){
 
-
+        Web w = new Web();
         String windDirection = w.getWind();
         ImageView compass = findViewById(R.id.aguja);
         TextView windSpeedText = findViewById(R.id.windSpeed);
@@ -124,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private float getOrientatioDegrees(String orientation){
-
+        Log.i("YA", "direcion trans grados " + orientation);
         float degrees = 0;
         switch (orientation){
 
@@ -176,11 +186,10 @@ public class MainActivity extends AppCompatActivity {
             case "NNW":
                 degrees = 352.5f;
                 break;
-
-
-
         }
 
+
+        Log.i("YA","grados brujula: " + degrees);
         return degrees;
     }
 
